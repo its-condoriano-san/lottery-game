@@ -32,6 +32,8 @@ const MyTickets = () => {
   } = useLottery();
   const { publicKey } = useWallet();
   const startingDate = startDay;
+  console.log('startingDate', startingDate);
+
   const [wonAmount, setWonAmount] = useState<number>(0);
   const [ticketsByDate, setTicketsByDate] = useState<Array<LotteryTicket>>();
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);

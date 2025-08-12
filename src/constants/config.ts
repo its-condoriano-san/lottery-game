@@ -1,1 +1,3 @@
-export const startDay = new Date('March 24, 2025');
+import { startOfDay, subDays } from 'date-fns';
+
+export const startDay = startOfDay(subDays(new Date(), 1));
