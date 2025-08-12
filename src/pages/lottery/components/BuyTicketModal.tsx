@@ -12,8 +12,7 @@ type BuyTicketModalProps = {
 };
 
 const BuyTicketModal = ({ trigger }: BuyTicketModalProps) => {
-  const { gameState, setGameState, addTicket, buy, prepareInputs } =
-    useLottery();
+  const { gameState, setGameState, addTicket, buy } = useLottery();
 
   const selectLottoNumber = (number: number) => {
     const newActiveTicket = [...gameState.activeTicket];
@@ -36,7 +35,23 @@ const BuyTicketModal = ({ trigger }: BuyTicketModalProps) => {
 
     newActiveTicket[firstUndefinedIndex] = number;
     console.log(gameState.activeTicket, 'active ticket');
-    setGameState({ ...gameState, activeTicket: newActiveTicket });
+
+    // Check if all 5 numbers are selected
+    const isTicketComplete = newActiveTicket.every((num) => num !== undefined);
+
+    if (isTicketComplete) {
+      // Add to selectedNumbers and reset activeTicket
+      setGameState({
+        ...gameState,
+        selectedNumbers: [
+          ...gameState.selectedNumbers,
+          newActiveTicket as number[]
+        ],
+        activeTicket: new Array(5).fill(undefined)
+      });
+    } else {
+      setGameState({ ...gameState, activeTicket: newActiveTicket });
+    }
   };
 
   return (
@@ -88,7 +103,8 @@ const BuyTicketModal = ({ trigger }: BuyTicketModalProps) => {
         {/* Ticket */}
         <div className="flex w-[400px] flex-col justify-between">
           <Typography variant={'subtitle-lg'}>Your Tickets</Typography>
-          <div className="selected-numbers flex justify-center gap-4">
+          <div className="selected-numbers flex flex-col justify-center gap-2">
+            <div>Add Tickets:</div>
             <Ticket
               key={gameState.activeTicket.length + 1}
               ticketNumber={gameState.activeTicket.reverse()}
@@ -97,14 +113,23 @@ const BuyTicketModal = ({ trigger }: BuyTicketModalProps) => {
             />
           </div>
           <div className="flex h-64 flex-col gap-4 overflow-y-auto">
-            {gameState.selectedNumbers.map((ticket, index) => (
-              <Ticket
-                key={index}
-                ticketNumber={ticket}
-                ticketNo={index + 1}
-                isDeletable={true}
-              />
-            ))}
+            <div>Selected Tickets:</div>
+            {gameState.selectedNumbers.length > 0 ? (
+              gameState.selectedNumbers.map((ticket, index) => (
+                <Ticket
+                  key={index}
+                  ticketNumber={ticket}
+                  ticketNo={index + 1}
+                  isDeletable={true}
+                />
+              ))
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <Typography variant={'body-sm'} className="text-[#58568B]">
+                  No selected tickets
+                </Typography>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col items-center gap-3">

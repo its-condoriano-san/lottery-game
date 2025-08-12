@@ -421,23 +421,24 @@ export const LotteryProvider = ({ children }: { children: ReactNode }) => {
 
   const removeTicket = (arr: (number | undefined)[]) => {
     console.log('removing ticket', arr);
-    // First check if the ticket exists in activeTicket
-    // const ticketExists = gameState.selectedNumbers.every(
-    //   (num, index) => num === arr[index]
-    // );
 
-    // if (ticketExists) {
-    //   // Use setGameState to properly update the state
+    // Find the index of the ticket to remove from selectedNumbers
+    const ticketIndex = gameState.selectedNumbers.findIndex(
+      (ticket) =>
+        ticket.length === arr.length &&
+        ticket.every((num, index) => num === arr[index])
+    );
 
-    //   setGameState((prevState) => ({
-    //     ...prevState,
-
-    //     selectedNumbers: prevState.activeTicket.map((num, index) =>
-    //       num === arr[index] ? 0 : num
-    //     )
-    //   }));
-    // }
-    // console.log(gameState.selectedNumbers);
+    if (ticketIndex !== -1) {
+      // Remove the ticket from selectedNumbers array
+      setGameState((prevState) => ({
+        ...prevState,
+        selectedNumbers: prevState.selectedNumbers.filter(
+          (_, index) => index !== ticketIndex
+        )
+      }));
+    }
+    console.log(gameState.selectedNumbers);
   };
 
   console.log(gameState.selectedNumbers, 'activ ticket');
