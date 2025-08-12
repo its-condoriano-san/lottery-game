@@ -8,7 +8,7 @@ const Lottery = lazy(() => import('@/pages/lottery'));
 export default function AppRouter() {
   const publicRoutes = [
     {
-      path: '/lottery',
+      path: '/',
       element: <Lottery />
     },
     {
